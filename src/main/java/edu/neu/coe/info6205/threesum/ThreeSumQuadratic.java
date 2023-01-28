@@ -1,6 +1,7 @@
 package edu.neu.coe.info6205.threesum;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,9 +37,56 @@ public class ThreeSumQuadratic implements ThreeSum {
      * @return a Triple such that
      */
     public List<Triple> getTriples(int j) {
+        System.out.println("j is" + j);
+        System.out.println("a[j] is" + a[j]);
         List<Triple> triples = new ArrayList<>();
         // FIXME : for each candidate, test if a[i] + a[j] + a[k] = 0.
-        // END 
+
+        for (int i = 0; i < length - 2; i++)
+        {
+            if (i == 0 || (i > 0 && a[i] != a[i - 1])) {
+                //System.out.println("came inside 1");
+                int low = i + 1;
+                int high = length - 1;
+                int sum = 0 - a[i];
+                //System.out.println("a low:" + a[low]);
+                //System.out.println("a high:" + a[high]);
+                //System.out.println("a i:" + a[i]);
+
+                while (low < high) {
+                    if (a[low] + a[high] == sum  && (a[low]== a[j] || a[high]== a[j] || a[i]== a[j])) {
+                        System.out.println("came inside 2");
+                        Triple tripleObj = new Triple(a[low], a[high], a[i]);
+                        triples.add(tripleObj);
+
+
+
+                        while (low < high && a[low] == a[low + 1])
+                            low++;
+                        while (low < high && a[high] == a[high - 1])
+                            high--;
+
+                        low++;
+                        high--;
+                    } else if (a[low] + a[high] > sum) {
+                        high--;
+                    } else {
+                        low++;
+                    }
+                }
+
+
+            }
+        }
+
+
+
+        // END
+        //System.out.println("size of trip"+triples.size());
+        //for(Triple t : triples){
+           // System.out.println("each element is"+t);
+
+        //}
         return triples;
     }
 
