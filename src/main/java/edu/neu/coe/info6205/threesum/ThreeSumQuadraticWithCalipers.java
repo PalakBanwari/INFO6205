@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Implementation of ThreeSum which follows the approach of dividing the solution-space into
@@ -47,53 +48,46 @@ public class ThreeSumQuadraticWithCalipers implements ThreeSum {
      * @return a List of Triples.
      */
     public static List<Triple> calipers(int[] a, int i, Function<Triple, Integer> function) {
-        System.out.println("function is"+function);
-        System.out.println("i is"+i);
+
         List<Triple> triples = new ArrayList<>();
         // FIXME : use function to qualify triples and to navigate otherwise.
 
-        for (int j = 0; j < a.length - 2; j++)
-        {
-            if (j == 0 || (j > 0 && a[j] != a[j - 1])) {
-                //System.out.println("came inside 1");
-                System.out.println("a[j] is"+a[j]);
+        int left = i + 1;
+        int right = a.length - 1;
 
-                int low = j + 1;
-                int high = a.length - 1;
-                int sum = 0 - a[j];
-                //System.out.println("a low:" + a[low]);
-                //System.out.println("a high:" + a[high]);
-                //System.out.println("a i:" + a[j]);
+        while (left < right) {
+            if (a[i] + a[left] + a[right] > 0){
+                right--;
+            }
+            else if (a[i] + a[left] + a[right] < 0){
+                left++;
+            }
 
-                while (low < high) {
-                    if (a[low] + a[high] == sum ) {
-                        //System.out.println("came inside 2");
-                        Triple tripleObj = new Triple(a[low], a[high], a[j]);
-                        triples.add(tripleObj);
-
-
-
-                        while (low < high && a[low] == a[low + 1])
-                            low++;
-                        while (low < high && a[high] == a[high - 1])
-                            high--;
-
-                        low++;
-                        high--;
-                    } else if (a[low] + a[high] > sum) {
-                        high--;
-                    } else {
-                        low++;
-                    }
-                }
-
-
+            else {
+                triples.add(new Triple(a[i], a[left], a[right]));
+                left++;
+                right--;
             }
         }
+
+
         // END 
         return triples;
     }
 
     private final int[] a;
     private final int length;
+
+    public static void main(String[] args){
+        long startTime = System.currentTimeMillis();
+
+        Supplier<int[]> intsSupplier = new Source(100, 1000).intsSupplier(10);
+        int[] ints = intsSupplier.get();
+        ThreeSum target = new ThreeSumQuadraticWithCalipers(ints);
+        Triple[] triples = target.getTriples();
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("That took " + (endTime - startTime) + " milliseconds");
+    }
 }
