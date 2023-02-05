@@ -59,36 +59,31 @@ public class Timer {
      * @return the average milliseconds per repetition.
      */
     public <T, U> double repeat(int n, Supplier<T> supplier, Function<T, U> function, UnaryOperator<T> preFunction, Consumer<U> postFunction) {
-        logger.trace("repeat: with " + n + " runs");
-        if(preFunction==null){
-            for(int i = 0; i < n; i++){
-                pause();
-                //System.out.println(supplier.get());
-                resume();
-                function.apply(supplier.get());
-                lap();
-                logger.trace("[preFunction]repeat: with " + n + " runs");
+        //logger.trace("repeat: with " + n + " runs");
+        // FIXME: note that the timer is running when this method is called and should still be running when it returns. by replacing the following code
+
+        pause();
+        for(int i = 0;i<n;i++) {
+            //pause();
+            T a =supplier.get();
+            if(preFunction!=null) {
+                a = preFunction.apply(supplier.get());
             }
-            laps--;
-            return stop();
-        }else {
-            for (int i = 0; i < n; i++) {
-                pause();
-                preFunction.apply(supplier.get());
-                resume();
-                U t = function.apply(supplier.get());
-                if (postFunction != null) {
-                    pause();
-                    postFunction.accept(t);
-                    logger.trace("[postFunction]repeat: with " + n + " runs");
-                    resume();
-                }
-                lap();
-                logger.trace("repeat: with " + n + " runs");
+            resume();
+            U r= function.apply(a);
+            pauseAndLap();
+            if(postFunction!=null) {
+                postFunction.accept(r);
             }
-            pause();
+
+
+
         }
-        return meanLapTime();
+
+        //pause();
+        final double result = meanLapTime();
+        resume();
+        return result;
         // END
     }
 
