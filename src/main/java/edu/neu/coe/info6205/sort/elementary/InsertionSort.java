@@ -89,7 +89,7 @@ public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
     {
         Supplier<Integer[]> supplier= new Source(20, 20).intsSupplier(10);
         Integer[] a = supplier.get();
-        Integer[] b = getPartSortedInts(a,0,a.length/2);
+        Integer[] b = partiallyOrdered(a,0,a.length/2);
         for(int i = 0;i<a.length;i++) {
             //System.out.print(b[i] + " ");
         }
